@@ -12,6 +12,7 @@ public class StepDefATM {
     ATM atm;
     Bank bank;
     boolean validLogin;
+    boolean validDeposit;
 
     @Before
     public void init() {
@@ -68,6 +69,22 @@ public class StepDefATM {
     public void customer_id_account_balance_is(int id, double balance) {
         assertEquals(balance,
                      bank.getCustomer(id).getAccount().getBalance());
+    }
+
+    @When("I deposit {float} to my account")
+    public void i_deposit_to_my_account(double amount) {
+        if (amount < 0){
+            validDeposit = false;
+        }
+        else {
+            atm.deposit(amount);
+            validDeposit = true;
+        }
+    }
+
+    @Then("I cannot deposit")
+    public void i_cannot_deposit() {
+        assertFalse(validDeposit);
     }
 
 }
